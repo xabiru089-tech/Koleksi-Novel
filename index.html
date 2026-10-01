@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arsip Novel Terjemahan Saya</title>
+    <title>Arsip Novel Terjemahan</title>
     <style>
         :root {
             --bg-main: #121319;
@@ -13,225 +13,199 @@
             --text-sub: #A0A0A0;
             --border: #2A2D3D;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding-bottom: 2rem; }
-        
-        header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-        .logo { font-size: 1.2rem; font-weight: bold; color: var(--accent); cursor: pointer; }
-        .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        
-        button { background: var(--accent); color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
-        button.secondary { background: #2A2D3D; color: var(--text-main); }
-        button.success { background: #00E676; color: #000; }
-
-        main { max-width: 900px; margin: 1.5rem auto; padding: 0 1rem; }
-        .view { display: none; }
-        .view.active { display: block; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.2rem; margin-top: 1rem; }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; }
-        .card img { width: 100%; height: 220px; object-fit: cover; }
-        .card-info { padding: 0.8rem; }
-        .card-title { font-weight: bold; font-size: 0.9rem; }
-
-        .form-box { background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: var(--text-sub); }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.6rem; background: var(--bg-main); border: 1px solid var(--border); border-radius: 4px; color: var(--text-main); outline: none; }
-
-        .chap-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
-        .chap-item { background: var(--bg-card); padding: 0.8rem; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; }
-
-        .reader { background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); line-height: 1.8; white-space: pre-line; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg-main); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 15px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .logo { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
+        .btn-group { display: flex; gap: 8px; }
+        button { background: var(--accent); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 0.85rem; }
+        button.secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 15px; }
+        .card { background: var(--bg-card); border-radius: 8px; padding: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; cursor: pointer; }
+        .card-title { font-weight: bold; font-size: 0.95rem; margin-bottom: 5px; color: #FFF; line-height: 1.2; }
+        .card-info { font-size: 0.75rem; color: var(--text-sub); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; padding: 15px; z-index: 100; }
+        .modal-content { background: var(--bg-card); width: 100%; max-width: 500px; border-radius: 10px; padding: 20px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: var(--text-sub); }
+        input, textarea { width: 100%; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); padding: 8px; border-radius: 6px; font-size: 0.9rem; }
+        textarea { resize: vertical; min-height: 100px; }
+        .reader-view { display: none; }
+        .reader-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .reader-content { font-size: 1.05rem; line-height: 1.7; color: #D1D5DB; white-space: pre-wrap; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo" onclick="showView('home')">📚 Terjemahan Saya</div>
-        <div class="btn-group">
-            <button onclick="showView('add-novel')">+ Novel Baru</button>
-            <button class="success" onclick="exportData()">💾 Simpan Ke File</button>
-            <button class="secondary" onclick="document.getElementById('import-file').click()">📂 Buka File</button>
-            <input type="file" id="import-file" style="display:none" onchange="importData(event)">
+    <div id="app-home">
+        <header>
+            <div class="logo">Arsip Novel</div>
+            <div class="btn-group">
+                <button class="secondary" onclick="exportData()">Export</button>
+                <button class="secondary" onclick="document.getElementById('file-input').click()">Import</button>
+                <input type="file" id="file-input" style="display:none" onchange="importData(event)">
+                <button onclick="openModal('modal-novel')">+ Novel</button>
+            </div>
+        </header>
+        <div id="novel-list" class="grid"></div>
+    </div>
+
+    <div id="app-novel" class="reader-view">
+        <header>
+            <button class="secondary" onclick="showView('app-home')">← Kembali</button>
+            <div id="novel-detail-title" class="logo">Detail Novel</div>
+            <button onclick="openModal('modal-chapter')">+ Bab</button>
+        </header>
+        <div id="chapter-list" class="grid"></div>
+    </div>
+
+    <div id="app-reader" class="reader-view">
+        <div class="reader-header">
+            <button class="secondary" onclick="showView('app-novel')">← Daftar Bab</button>
+            <h3 id="read-chapter-title">Judul Bab</h3>
         </div>
-    </header>
+        <div id="read-chapter-content" class="reader-content"></div>
+    </div>
 
-    <main>
-        <!-- KATALOG NOVEL -->
-        <section id="view-home" class="view active">
-            <h2>Koleksi Novel</h2>
-            <div id="novel-grid" class="grid"></div>
-        </section>
-
-        <!-- FORM NOVEL BARU -->
-        <section id="view-add-novel" class="view">
-            <div class="form-box">
-                <h3>Tambah Novel Baru</h3>
-                <form onsubmit="saveNovel(event)" style="margin-top: 1rem;">
-                    <div class="form-group"><label>Judul Novel</label><input type="text" id="n-title" required></div>
-                    <div class="form-group"><label>Penulis Asli</label><input type="text" id="n-author"></div>
-                    <div class="form-group"><label>Genre</label><input type="text" id="n-genre" placeholder="Fantasy, Romance, dll"></div>
-                    <div class="form-group"><label>URL Gambar Cover (Opsional)</label><input type="url" id="n-cover" placeholder="https://..."></div>
-                    <div class="form-group"><label>Sinopsis</label><textarea id="n-synopsis" rows="3"></textarea></div>
-                    <button type="submit" style="width: 100%;">Simpan Novel</button>
-                </form>
+    <!-- Modal Novel -->
+    <div id="modal-novel" class="modal">
+        <div class="modal-content">
+            <h3>Tambah Novel</h3><br>
+            <div class="form-group">
+                <label>Judul Novel</label>
+                <input type="text" id="input-novel-title">
             </div>
-        </section>
-
-        <!-- DETAIL NOVEL -->
-        <section id="view-detail" class="view">
-            <button class="secondary" onclick="showView('home')">← Kembali</button>
-            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 1px solid var(--border);">
-                <h2 id="d-title"></h2>
-                <p id="d-author" style="color: var(--text-sub); font-size: 0.9rem; margin-top: 4px;"></p>
-                <p id="d-synopsis" style="margin-top: 0.8rem; font-size: 0.85rem;"></p>
+            <div class="btn-group" style="justify-content: flex-end;">
+                <button class="secondary" onclick="closeModal('modal-novel')">Batal</button>
+                <button onclick="saveNovel()">Simpan</button>
             </div>
+        </div>
+    </div>
 
-            <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-                <h3>Daftar Bab</h3>
-                <button onclick="showView('add-chapter')">+ Tambah Bab</button>
+    <!-- Modal Chapter -->
+    <div id="modal-chapter" class="modal">
+        <div class="modal-content">
+            <h3>Tambah Bab Terjemahan</h3><br>
+            <div class="form-group">
+                <label>Judul Bab (cth: Bab 1)</label>
+                <input type="text" id="input-chapter-title">
             </div>
-            <div id="chapter-list" class="chap-list"></div>
-        </section>
-
-        <!-- FORM BAB BARU -->
-        <section id="view-add-chapter" class="view">
-            <div class="form-box">
-                <h3>Tambah Bab Terjemahan</h3>
-                <form onsubmit="saveChapter(event)" style="margin-top: 1rem;">
-                    <div class="form-group"><label>Judul / Nomor Bab</label><input type="text" id="c-title" required placeholder="Contoh: Bab 1 - Awal Pertemuan"></div>
-                    <div class="form-group"><label>Isi Teks Terjemahan</label><textarea id="c-content" rows="10" required></textarea></div>
-                    <button type="submit" style="width: 100%;">Simpan Bab</button>
-                </form>
+            <div class="form-group">
+                <label>Isi Terjemahan</label>
+                <textarea id="input-chapter-content"></textarea>
             </div>
-        </section>
-
-        <!-- MODE BACA -->
-        <section id="view-reader" class="view">
-            <button class="secondary" onclick="showView('detail')">← Kembali ke Detail</button>
-            <div class="reader" style="margin-top: 1rem;">
-                <h2 id="r-title" style="margin-bottom: 1rem; color: var(--accent);"></h2>
-                <div id="r-content"></div>
+            <div class="btn-group" style="justify-content: flex-end;">
+                <button class="secondary" onclick="closeModal('modal-chapter')">Batal</button>
+                <button onclick="saveChapter()">Simpan</button>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('my_novels_db')) || [];
-        let activeNovelIndex = null;
+        let db = JSON.parse(localStorage.getItem('my_novels')) || [];
+        let activeNovelId = null;
 
-        function saveToStorage() {
-            localStorage.setItem('my_novels_db', JSON.stringify(db));
+        function saveData() {
+            localStorage.setItem('my_novels', JSON.stringify(db));
+            renderNovels();
         }
 
         function showView(viewId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById('view-' + viewId).classList.add('active');
-            if (viewId === 'home') renderHome();
+            document.querySelectorAll('#app-home, .reader-view').forEach(el => el.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
         }
 
-        function renderHome() {
-            const grid = document.getElementById('novel-grid');
-            grid.innerHTML = '';
-            if (db.length === 0) {
-                grid.innerHTML = '<p style="color:var(--text-sub);">Belum ada novel. Klik "+ Novel Baru" untuk membuat!</p>';
-                return;
-            }
-            db.forEach((n, idx) => {
-                grid.innerHTML += `
-                    <div class="card" onclick="openNovel(${idx})">
-                        <img src="${n.cover || 'https://via.placeholder.com/160x220?text=No+Cover'}" alt="Cover">
-                        <div class="card-info">
-                            <div class="card-title">${n.title}</div>
-                            <div style="font-size:0.8rem; color:var(--text-sub);">${n.chapters.length} Bab</div>
-                        </div>
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function saveNovel() {
+            const title = document.getElementById('input-novel-title').value.trim();
+            if(!title) return;
+            db.push({ id: Date.now(), title, chapters: [] });
+            document.getElementById('input-novel-title').value = '';
+            closeModal('modal-novel');
+            saveData();
+        }
+
+        function renderNovels() {
+            const container = document.getElementById('novel-list');
+            container.innerHTML = db.length === 0 ? '<p style="color:var(--text-sub)">Belum ada novel. Klik + Novel untuk menambah.</p>' : '';
+            db.forEach(n => {
+                container.innerHTML += `
+                    <div class="card" onclick="openNovel(${n.id})">
+                        <div class="card-title">${n.title}</div>
+                        <div class="card-info">${n.chapters.length} Bab</div>
                     </div>`;
             });
         }
 
-        function saveNovel(e) {
-            e.preventDefault();
-            const newNovel = {
-                title: document.getElementById('n-title').value,
-                author: document.getElementById('n-author').value,
-                genre: document.getElementById('n-genre').value,
-                cover: document.getElementById('n-cover').value,
-                synopsis: document.getElementById('n-synopsis').value,
-                chapters: []
-            };
-            db.push(newNovel);
-            saveToStorage();
-            e.target.reset();
-            showView('home');
+        function openNovel(id) {
+            activeNovelId = id;
+            const novel = db.find(n => n.id === id);
+            document.getElementById('novel-detail-title').innerText = novel.title;
+            renderChapters();
+            showView('app-novel');
         }
 
-        function openNovel(idx) {
-            activeNovelIndex = idx;
-            const novel = db[idx];
-            document.getElementById('d-title').innerText = novel.title;
-            document.getElementById('d-author').innerText = `Penulis: ${novel.author \vert{}\vert{} '-'} \vert{} Genre:${novel.genre || '-'}`;
-            document.getElementById('d-synopsis').innerText = novel.synopsis;
-
-            const list = document.getElementById('chapter-list');
-            list.innerHTML = '';
-            if (novel.chapters.length === 0) {
-                list.innerHTML = '<p style="color:var(--text-sub);">Belum ada bab.</p>';
-            } else {
-                novel.chapters.forEach((c, cIdx) => {
-                    list.innerHTML += `
-                        <div class="chap-item" onclick="openChapter(${cIdx})">
-                            <span>${c.title}</span>
-                            <span style="color:var(--accent); font-size:0.8rem;">Baca →</span>
-                        </div>`;
-                });
-            }
-            showView('detail');
+        function saveChapter() {
+            const title = document.getElementById('input-chapter-title').value.trim();
+            const content = document.getElementById('input-chapter-content').value.trim();
+            if(!title || !content) return;
+            const novel = db.find(n => n.id === activeNovelId);
+            novel.chapters.push({ id: Date.now(), title, content });
+            document.getElementById('input-chapter-title').value = '';
+            document.getElementById('input-chapter-content').value = '';
+            closeModal('modal-chapter');
+            saveData();
+            renderChapters();
         }
 
-        function saveChapter(e) {
-            e.preventDefault();
-            const newChapter = {
-                title: document.getElementById('c-title').value,
-                content: document.getElementById('c-content').value
-            };
-            db[activeNovelIndex].chapters.push(newChapter);
-            saveToStorage();
-            e.target.reset();
-            openNovel(activeNovelIndex);
+        function renderChapters() {
+            const novel = db.find(n => n.id === activeNovelId);
+            const container = document.getElementById('chapter-list');
+            container.innerHTML = novel.chapters.length === 0 ? '<p style="color:var(--text-sub)">Belum ada bab.</p>' : '';
+            novel.chapters.forEach(c => {
+                container.innerHTML += `
+                    <div class="card" onclick="readChapter(${c.id})">
+                        <div class="card-title">${c.title}</div>
+                    </div>`;
+            });
         }
 
-        function openChapter(cIdx) {
-            const chap = db[activeNovelIndex].chapters[cIdx];
-            document.getElementById('r-title').innerText = chap.title;
-            document.getElementById('r-content').innerText = chap.content;
-            showView('reader');
+        function readChapter(chapId) {
+            const novel = db.find(n => n.id === activeNovelId);
+            const chap = novel.chapters.find(c => c.id === chapId);
+            document.getElementById('read-chapter-title').innerText = chap.title;
+            document.getElementById('read-chapter-content').innerText = chap.content;
+            showView('app-reader');
         }
 
-        // AKSI SIMPAN DAN BUKA FILE
         function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "cadangan_novel_terjemahan.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+            const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'cadangan_novel.json';
+            a.click();
         }
 
         function importData(e) {
-            const fileReader = new FileReader();
-            fileReader.onload = function (event) {
-                db = JSON.parse(event.target.result);
-                saveToStorage();
-                renderHome();
-                alert("Data terjemahan berhasil dimuat kembali!");
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    db = JSON.parse(evt.target.result);
+                    saveData();
+                    alert('Data berhasil diimpor!');
+                } catch(err) {
+                    alert('File JSON tidak valid!');
+                }
             };
-            fileReader.readAsText(e.target.files[0]);
+            reader.readAsText(file);
         }
 
-        renderHome();
+        renderNovels();
     </script>
 </body>
-</html>
+                    </html>
+    
