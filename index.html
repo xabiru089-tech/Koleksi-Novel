@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip Novel Terjemahan Saya</title>
+    <style>
+        :root {
+            --bg-main: #121319;
+            --bg-card: #1A1C24;
+            --accent: #7C4DFF;
+            --text-main: #E0E0E0;
+            --text-sub: #A0A0A0;
+            --border: #2A2D3D;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding-bottom: 2rem; }
+        
+        header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-size: 1.2rem; font-weight: bold; color: var(--accent); cursor: pointer; }
+        .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        
+        button { background: var(--accent); color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+        button.secondary { background: #2A2D3D; color: var(--text-main); }
+        button.success { background: #00E676; color: #000; }
+
+        main { max-width: 900px; margin: 1.5rem auto; padding: 0 1rem; }
+        .view { display: none; }
+        .view.active { display: block; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.2rem; margin-top: 1rem; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; }
+        .card img { width: 100%; height: 220px; object-fit: cover; }
+        .card-info { padding: 0.8rem; }
+        .card-title { font-weight: bold; font-size: 0.9rem; }
+
+        .form-box { background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: var(--text-sub); }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.6rem; background: var(--bg-main); border: 1px solid var(--border); border-radius: 4px; color: var(--text-main); outline: none; }
+
+        .chap-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .chap-item { background: var(--bg-card); padding: 0.8rem; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; }
+
+        .reader { background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); line-height: 1.8; white-space: pre-line; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="showView('home')">📚 Terjemahan Saya</div>
+        <div class="btn-group">
+            <button onclick="showView('add-novel')">+ Novel Baru</button>
+            <button class="success" onclick="exportData()">💾 Simpan Ke File</button>
+            <button class="secondary" onclick="document.getElementById('import-file').click()">📂 Buka File</button>
+            <input type="file" id="import-file" style="display:none" onchange="importData(event)">
+        </div>
+    </header>
+
+    <main>
+        <!-- KATALOG NOVEL -->
+        <section id="view-home" class="view active">
+            <h2>Koleksi Novel</h2>
+            <div id="novel-grid" class="grid"></div>
+        </section>
+
+        <!-- FORM NOVEL BARU -->
+        <section id="view-add-novel" class="view">
+            <div class="form-box">
+                <h3>Tambah Novel Baru</h3>
+                <form onsubmit="saveNovel(event)" style="margin-top: 1rem;">
+                    <div class="form-group"><label>Judul Novel</label><input type="text" id="n-title" required></div>
+                    <div class="form-group"><label>Penulis Asli</label><input type="text" id="n-author"></div>
+                    <div class="form-group"><label>Genre</label><input type="text" id="n-genre" placeholder="Fantasy, Romance, dll"></div>
+                    <div class="form-group"><label>URL Gambar Cover (Opsional)</label><input type="url" id="n-cover" placeholder="https://..."></div>
+                    <div class="form-group"><label>Sinopsis</label><textarea id="n-synopsis" rows="3"></textarea></div>
+                    <button type="submit" style="width: 100%;">Simpan Novel</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- DETAIL NOVEL -->
+        <section id="view-detail" class="view">
+            <button class="secondary" onclick="showView('home')">← Kembali</button>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 1px solid var(--border);">
+                <h2 id="d-title"></h2>
+                <p id="d-author" style="color: var(--text-sub); font-size: 0.9rem; margin-top: 4px;"></p>
+                <p id="d-synopsis" style="margin-top: 0.8rem; font-size: 0.85rem;"></p>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3>Daftar Bab</h3>
+                <button onclick="showView('add-chapter')">+ Tambah Bab</button>
+            </div>
+            <div id="chapter-list" class="chap-list"></div>
+        </section>
+
+        <!-- FORM BAB BARU -->
+        <section id="view-add-chapter" class="view">
+            <div class="form-box">
+                <h3>Tambah Bab Terjemahan</h3>
+                <form onsubmit="saveChapter(event)" style="margin-top: 1rem;">
+                    <div class="form-group"><label>Judul / Nomor Bab</label><input type="text" id="c-title" required placeholder="Contoh: Bab 1 - Awal Pertemuan"></div>
+                    <div class="form-group"><label>Isi Teks Terjemahan</label><textarea id="c-content" rows="10" required></textarea></div>
+                    <button type="submit" style="width: 100%;">Simpan Bab</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- MODE BACA -->
+        <section id="view-reader" class="view">
+            <button class="secondary" onclick="showView('detail')">← Kembali ke Detail</button>
+            <div class="reader" style="margin-top: 1rem;">
+                <h2 id="r-title" style="margin-bottom: 1rem; color: var(--accent);"></h2>
+                <div id="r-content"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('my_novels_db')) || [];
+        let activeNovelIndex = null;
+
+        function saveToStorage() {
+            localStorage.setItem('my_novels_db', JSON.stringify(db));
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            if (viewId === 'home') renderHome();
+        }
+
+        function renderHome() {
+            const grid = document.getElementById('novel-grid');
+            grid.innerHTML = '';
+            if (db.length === 0) {
+                grid.innerHTML = '<p style="color:var(--text-sub);">Belum ada novel. Klik "+ Novel Baru" untuk membuat!</p>';
+                return;
+            }
+            db.forEach((n, idx) => {
+                grid.innerHTML += `
+                    <div class="card" onclick="openNovel(${idx})">
+                        <img src="${n.cover || 'https://via.placeholder.com/160x220?text=No+Cover'}" alt="Cover">
+                        <div class="card-info">
+                            <div class="card-title">${n.title}</div>
+                            <div style="font-size:0.8rem; color:var(--text-sub);">${n.chapters.length} Bab</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function saveNovel(e) {
+            e.preventDefault();
+            const newNovel = {
+                title: document.getElementById('n-title').value,
+                author: document.getElementById('n-author').value,
+                genre: document.getElementById('n-genre').value,
+                cover: document.getElementById('n-cover').value,
+                synopsis: document.getElementById('n-synopsis').value,
+                chapters: []
+            };
+            db.push(newNovel);
+            saveToStorage();
+            e.target.reset();
+            showView('home');
+        }
+
+        function openNovel(idx) {
+            activeNovelIndex = idx;
+            const novel = db[idx];
+            document.getElementById('d-title').innerText = novel.title;
+            document.getElementById('d-author').innerText = `Penulis: ${novel.author \vert{}\vert{} '-'} \vert{} Genre:${novel.genre || '-'}`;
+            document.getElementById('d-synopsis').innerText = novel.synopsis;
+
+            const list = document.getElementById('chapter-list');
+            list.innerHTML = '';
+            if (novel.chapters.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-sub);">Belum ada bab.</p>';
+            } else {
+                novel.chapters.forEach((c, cIdx) => {
+                    list.innerHTML += `
+                        <div class="chap-item" onclick="openChapter(${cIdx})">
+                            <span>${c.title}</span>
+                            <span style="color:var(--accent); font-size:0.8rem;">Baca →</span>
+                        </div>`;
+                });
+            }
+            showView('detail');
+        }
+
+        function saveChapter(e) {
+            e.preventDefault();
+            const newChapter = {
+                title: document.getElementById('c-title').value,
+                content: document.getElementById('c-content').value
+            };
+            db[activeNovelIndex].chapters.push(newChapter);
+            saveToStorage();
+            e.target.reset();
+            openNovel(activeNovelIndex);
+        }
+
+        function openChapter(cIdx) {
+            const chap = db[activeNovelIndex].chapters[cIdx];
+            document.getElementById('r-title').innerText = chap.title;
+            document.getElementById('r-content').innerText = chap.content;
+            showView('reader');
+        }
+
+        // AKSI SIMPAN DAN BUKA FILE
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "cadangan_novel_terjemahan.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(e) {
+            const fileReader = new FileReader();
+            fileReader.onload = function (event) {
+                db = JSON.parse(event.target.result);
+                saveToStorage();
+                renderHome();
+                alert("Data terjemahan berhasil dimuat kembali!");
+            };
+            fileReader.readAsText(e.target.files[0]);
+        }
+
+        renderHome();
+    </script>
+</body>
+</html>
