@@ -29,7 +29,7 @@
         .chapter-list { display: flex; flex-direction: column; gap: 6px; }
         .chapter-item { background: var(--card); padding: 10px 14px; border-radius: 6px; border: 1px solid var(--border); display: flex; justify-content: space-between; cursor: pointer; }
         
-        /* TAMPILAN BACA */
+        /* FORMAT TAMPILAN BACA (TIGHT & BOHO PAS) */
         .reader-container { padding: 20px 16px; border-radius: 8px; border: 1px solid var(--border); line-height: 1.5; font-size: 1.05rem; margin-top: 14px; background: var(--card); }
         .reader-container p.narasi { margin-bottom: 0.6em; text-align: justify; }
         .reader-container p.dialog { margin-bottom: 0.25em; color: #fff; }
@@ -172,6 +172,7 @@
             if(f) { let r = new FileReader(); r.onload = (x) => tempCover = x.target.result; r.readAsDataURL(f); }
         }
 
+        // PROSES OTOMATIS DI LATAR BELAKANG
         function autoFormatText(raw) {
             if (!raw) return "";
             return raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
@@ -238,6 +239,7 @@
             curChapId = cId; let n = db.find(x => x.id === curNovelId), c = n ? n.chapters.find(x => x.id === cId) : null;
             if(!c) return;
             document.getElementById('reader-title').innerText = c.title;
+            // DITAMPILKAN SEBAGAI HTML (PARAGRAF RAPI DENGAN JARAK AUTOMATIS)
             document.getElementById('reader-box').innerHTML = c.content;
             let idx = n.chapters.findIndex(x => x.id === cId);
             document.getElementById('btn-prev').disabled = (idx === 0);
@@ -277,5 +279,5 @@
         }
     </script>
 </body>
-    </html>
-                    
+                                                                  </html>
+    
