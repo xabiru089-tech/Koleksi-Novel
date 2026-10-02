@@ -29,14 +29,21 @@
         .chapter-list { display: flex; flex-direction: column; gap: 6px; }
         .chapter-item { background: var(--card); padding: 10px 14px; border-radius: 6px; border: 1px solid var(--border); display: flex; justify-content: space-between; cursor: pointer; }
         
-        /* FORMAT TAMPILAN BACA (TIGHT & BOHO PAS) */
-        .reader-container { padding: 20px 16px; border-radius: 8px; border: 1px solid var(--border); line-height: 1.5; font-size: 1.05rem; margin-top: 14px; background: var(--card); }
-        .reader-container p.narasi { margin-bottom: 0.6em; text-align: justify; }
-        .reader-container p.dialog { margin-bottom: 0.25em; color: #fff; }
-        .reader-container p.dialog + p.narasi { margin-top: 0.4em; }
+        /* TAMPILAN BACA (BERSIH DENGAN CSS MURNI) */
+        .reader-container { 
+            padding: 20px 16px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border); 
+            line-height: 1.6; 
+            font-size: 1.05rem; 
+            margin-top: 14px; 
+            background: var(--card); 
+            white-space: pre-line; 
+            text-align: justify;
+        }
         .theme-dark { background: #1e293b; color: #f8fafc; }
-        .theme-light { background: #f8f9fa; color: #1e293b; } .theme-light p.dialog { color: #0f172a; }
-        .theme-sepia { background: #f4ebd9; color: #433422; } .theme-sepia p.dialog { color: #2a1f13; }
+        .theme-light { background: #f8f9fa; color: #1e293b; }
+        .theme-sepia { background: #f4ebd9; color: #433422; }
 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); justify-content: center; align-items: center; padding: 16px; z-index: 100; }
         .modal-box { background: var(--card); width: 100%; max-width: 500px; padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
@@ -172,14 +179,6 @@
             if(f) { let r = new FileReader(); r.onload = (x) => tempCover = x.target.result; r.readAsDataURL(f); }
         }
 
-        // PROSES OTOMATIS DI LATAR BELAKANG
-        function autoFormatText(raw) {
-            if (!raw) return "";
-            return raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
-                .split('\n').map(l => l.trim()).filter(l => l.length > 0)
-                .map(l => /^["'“'«\-–—]/.test(l) ? `<p class="dialog">${l}</p>` : `<p class="narasi">${l}</p>`).join('');
-        }
-
         function saveNovel() {
             let title = document.getElementById('in-n-title').value.trim();
             if (!title) return alert('Judul wajib diisi!');
@@ -218,7 +217,8 @@
             let n = db.find(x => x.id === curNovelId);
             if (n) {
                 if(!n.chapters) n.chapters = [];
-                n.chapters.push({ id: Date.now(), title, content: autoFormatText(text) });
+                // DISIMPAN MURNI TEKS MENTAH APA ADANYA
+                n.chapters.push({ id: Date.now(), title, content: text });
                 document.getElementById('in-c-title').value = ''; document.getElementById('in-c-text').value = '';
                 closeModal('modal-chapter'); saveDB(); renderChapters();
             }
@@ -239,8 +239,8 @@
             curChapId = cId; let n = db.find(x => x.id === curNovelId), c = n ? n.chapters.find(x => x.id === cId) : null;
             if(!c) return;
             document.getElementById('reader-title').innerText = c.title;
-            // DITAMPILKAN SEBAGAI HTML (PARAGRAF RAPI DENGAN JARAK AUTOMATIS)
-            document.getElementById('reader-box').innerHTML = c.content;
+            // DITAMPILKAN SEBAGAI TEKS POLOS TANPA INJEKSI TAG HTML
+            document.getElementById('reader-box').textContent = c.content;
             let idx = n.chapters.findIndex(x => x.id === cId);
             document.getElementById('btn-prev').disabled = (idx === 0);
             document.getElementById('btn-next').disabled = (idx === n.chapters.length - 1);
@@ -279,5 +279,5 @@
         }
     </script>
 </body>
-                                                                  </html>
+                </html>
     
