@@ -29,7 +29,7 @@
         .chapter-list { display: flex; flex-direction: column; gap: 6px; }
         .chapter-item { background: var(--card); padding: 10px 14px; border-radius: 6px; border: 1px solid var(--border); display: flex; justify-content: space-between; cursor: pointer; }
         
-        /* TAMPILAN BACA (BERSIH DENGAN CSS MURNI) */
+        /* TAMPILAN BACA NOVEL (JARAK SPASI TIGHT 1 ENTER) */
         .reader-container { 
             padding: 20px 16px; 
             border-radius: 8px; 
@@ -38,8 +38,13 @@
             font-size: 1.05rem; 
             margin-top: 14px; 
             background: var(--card); 
-            white-space: pre-line; 
-            text-align: justify;
+        }
+        .reader-container p { 
+            margin: 0 0 0.8em 0; 
+            text-align: justify; 
+        }
+        .reader-container p.dialog { 
+            margin-bottom: 0.3em; 
         }
         .theme-dark { background: #1e293b; color: #f8fafc; }
         .theme-light { background: #f8f9fa; color: #1e293b; }
@@ -179,6 +184,29 @@
             if(f) { let r = new FileReader(); r.onload = (x) => tempCover = x.target.result; r.readAsDataURL(f); }
         }
 
+        // FUNGSI MEMPROSES PARAGRAF OTOMATIS DI LATAR BELAKANG
+        function processTextToHTML(rawText) {
+            if (!rawText) return "";
+            
+            // Split baris demi baris, hapus baris kosong ganda
+            let lines = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+            let htmlResult = "";
+
+            lines.forEach(line => {
+                let cleanLine = line.trim();
+                if (cleanLine.length > 0) {
+                    // Cek apakah dialog (diawali tanda petik) atau narasi biasa
+                    if (/^["'“'«\-–—]/.test(cleanLine)) {
+                        htmlResult += `<p class="dialog">${cleanLine}</p>`;
+                    } else {
+                        htmlResult += `<p>${cleanLine}</p>`;
+                    }
+                }
+            });
+
+            return htmlResult;
+        }
+
         function saveNovel() {
             let title = document.getElementById('in-n-title').value.trim();
             if (!title) return alert('Judul wajib diisi!');
@@ -217,8 +245,11 @@
             let n = db.find(x => x.id === curNovelId);
             if (n) {
                 if(!n.chapters) n.chapters = [];
-                // DISIMPAN MURNI TEKS MENTAH APA ADANYA
-                n.chapters.push({ id: Date.now(), title, content: text });
+                
+                // PROSES LATAR BELAKANG: Langsung ubah teks mentah menjadi HTML paragraf rapi
+                let processedHTML = processTextToHTML(text);
+
+                n.chapters.push({ id: Date.now(), title, content: processedHTML });
                 document.getElementById('in-c-title').value = ''; document.getElementById('in-c-text').value = '';
                 closeModal('modal-chapter'); saveDB(); renderChapters();
             }
@@ -239,8 +270,8 @@
             curChapId = cId; let n = db.find(x => x.id === curNovelId), c = n ? n.chapters.find(x => x.id === cId) : null;
             if(!c) return;
             document.getElementById('reader-title').innerText = c.title;
-            // DITAMPILKAN SEBAGAI TEKS POLOS TANPA INJEKSI TAG HTML
-            document.getElementById('reader-box').textContent = c.content;
+            // TAMPILKAN HASIL PARAGRAF HTML SECARA RAPI
+            document.getElementById('reader-box').innerHTML = c.content;
             let idx = n.chapters.findIndex(x => x.id === cId);
             document.getElementById('btn-prev').disabled = (idx === 0);
             document.getElementById('btn-next').disabled = (idx === n.chapters.length - 1);
@@ -279,5 +310,5 @@
         }
     </script>
 </body>
-                </html>
+    </html>
     
