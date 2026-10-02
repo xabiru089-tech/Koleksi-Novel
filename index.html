@@ -5,264 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HesTL - Koleksi Novel Terjemahan</title>
     <style>
-        :root {
-            --bg-main: #141113;
-            --bg-card: #1E191C;
-            --bg-modal: #251F22;
-            --accent-red: #8B0000;
-            --accent-gold: #D4AF37;
-            --accent-gold-hover: #F3E5AB;
-            --text-main: #EAE3D2;
-            --text-sub: #A89F91;
-            --border: #3D312A;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body { 
-            background: var(--bg-main); 
-            color: var(--text-main); 
-            font-family: "Georgia", "Times New Roman", serif; 
-            padding: 20px;
-            background-image: radial-gradient(circle at 50% 0%, #2a1b1e 0%, var(--bg-main) 70%);
-            min-height: 100vh;
-        }
-
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding-bottom: 15px; 
-            border-bottom: 2px solid var(--accent-gold); 
-            margin-bottom: 25px;
-        }
-
-        .brand-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-logo {
-            font-size: 2rem;
-            color: var(--accent-gold);
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-        }
-
-        .brand-tagline {
-            font-size: 0.85rem;
-            color: var(--text-sub);
-            font-style: italic;
-        }
-
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-
-        button { 
-            background: linear-gradient(135deg, var(--accent-red), #5B0000); 
-            color: var(--accent-gold); 
-            border: 1px solid var(--accent-gold); 
-            padding: 9px 16px; 
-            border-radius: 4px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        button:hover { 
-            background: var(--accent-gold); 
-            color: #000; 
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
-        }
-
-        button.secondary { 
-            background: transparent; 
-            border: 1px solid var(--border); 
-            color: var(--text-main); 
-        }
-
-        button.secondary:hover {
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
-        }
-
-        .stats-bar {
-            display: flex;
-            gap: 20px;
-            background: var(--bg-card);
-            padding: 12px 20px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            margin-bottom: 25px;
-            font-size: 0.9rem;
-            color: var(--text-sub);
-        }
-
-        .stats-bar span { color: var(--accent-gold); font-weight: bold; }
-
-        .search-bar {
-            margin-bottom: 20px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 10px 15px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            border-radius: 4px;
-            font-size: 0.95rem;
-        }
-
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
-            gap: 20px; 
-        }
-
-        .card { 
-            background: var(--bg-card); 
-            border-radius: 6px; 
-            border: 1px solid var(--border); 
-            overflow: hidden;
-            cursor: pointer; 
-            transition: transform 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover { 
-            transform: translateY(-4px); 
-            border-color: var(--accent-gold); 
-        }
-
-        .card-cover {
-            width: 100%;
-            height: 240px;
-            object-fit: cover;
-            background: #0f0c0e;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .card-body {
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            justify-content: space-between;
-        }
-
-        .card-title { 
-            font-weight: bold; 
-            font-size: 1rem; 
-            color: var(--text-main); 
-            margin-bottom: 6px; 
-            line-height: 1.3;
-        }
-
-        .card-info { 
-            font-size: 0.8rem; 
-            color: var(--text-sub); 
-        }
-
-        .modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); 
-            justify-content: center; 
-            align-items: center; 
-            padding: 20px; 
-            z-index: 100; 
-        }
-
-        .modal-content { 
-            background: var(--bg-modal); 
-            width: 100%; 
-            max-width: 650px; 
-            border-radius: 8px; 
-            padding: 25px; 
-            border: 1px solid var(--accent-gold); 
-            max-height: 90vh; 
-            overflow-y: auto; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-        }
-
-        .modal-header {
-            font-size: 1.2rem;
-            color: var(--accent-gold);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .form-group { margin-bottom: 15px; }
-
-        label { 
-            display: block; 
-            font-size: 0.85rem; 
-            margin-bottom: 6px; 
-            color: var(--text-sub); 
-        }
-
-        input[type="text"], textarea { 
-            width: 100%; 
-            background: var(--bg-main); 
-            border: 1px solid var(--border); 
-            color: var(--text-main); 
-            padding: 10px; 
-            border-radius: 4px; 
-            font-size: 0.95rem; 
-            font-family: inherit;
-        }
-
-        textarea { resize: vertical; min-height: 180px; line-height: 1.6; }
-
-        .reader-view { display: none; }
-
-        .reader-header { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            margin-bottom: 20px; 
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 15px;
-        }
-
-        .reader-content { 
-            font-size: 1.1rem; 
-            line-height: 1.9; 
-            color: #DDD; 
-            white-space: pre-wrap; 
-            background: var(--bg-card);
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .status-msg { 
-            font-size: 0.85rem; 
-            color: var(--accent-gold); 
-            margin-top: 10px; 
-            font-style: italic;
-        }
-
-        .preview-img {
-            max-width: 100px;
-            max-height: 140px;
-            margin-top: 10px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            display: none;
-        }
+        :root{--bg-main:#141113;--bg-card:#1E191C;--bg-modal:#251F22;--accent-red:#8B0000;--accent-gold:#D4AF37;--text-main:#EAE3D2;--text-sub:#A89F91;--border:#3D312A}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--bg-main);color:var(--text-main);font-family:"Georgia",serif;padding:20px;background-image:radial-gradient(circle at 50% 0%,#2a1b1e 0%,var(--bg-main) 70%);min-height:100vh}
+        header{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;border-bottom:2px solid var(--accent-gold);margin-bottom:25px}
+        .brand-container{display:flex;align-items:center;gap:12px}
+        .brand-logo{font-size:2rem;color:var(--accent-gold);font-weight:bold;letter-spacing:2px;text-shadow:0 0 10px rgba(212,175,55,0.3)}
+        .brand-tagline{font-size:.85rem;color:var(--text-sub);font-style:italic}
+        .btn-group{display:flex;gap:10px;flex-wrap:wrap}
+        button{background:linear-gradient(135deg,var(--accent-red),#5B0000);color:var(--accent-gold);border:1px solid var(--accent-gold);padding:9px 16px;border-radius:4px;font-weight:bold;cursor:pointer;font-size:.9rem;transition:all .2s ease}
+        button:hover{background:var(--accent-gold);color:#000;box-shadow:0 0 12px rgba(212,175,55,0.4)}
+        button.secondary{background:transparent;border:1px solid var(--border);color:var(--text-main)}
+        button.secondary:hover{border-color:var(--accent-gold);color:var(--accent-gold)}
+        .stats-bar{display:flex;gap:20px;background:var(--bg-card);padding:12px 20px;border-radius:6px;border:1px solid var(--border);margin-bottom:25px;font-size:.9rem;color:var(--text-sub)}
+        .stats-bar span{color:var(--accent-gold);font-weight:bold}
+        .search-bar{margin-bottom:20px}
+        .search-bar input{width:100%;padding:10px 15px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-main);border-radius:4px;font-size:.95rem}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px}
+        .card{background:var(--bg-card);border-radius:6px;border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s;display:flex;flex-direction:column}
+        .card:hover{transform:translateY(-4px);border-color:var(--accent-gold)}
+        .card-cover{width:100%;height:240px;object-fit:cover;background:#0f0c0e;border-bottom:1px solid var(--border)}
+        .card-body{padding:12px;display:flex;flex-direction:column;flex-grow:1;justify-content:space-between}
+        .card-title{font-weight:bold;font-size:1rem;color:var(--text-main);margin-bottom:6px;line-height:1.3}
+        .card-info{font-size:.8rem;color:var(--text-sub)}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;padding:20px;z-index:100}
+        .modal-content{background:var(--bg-modal);width:100%;max-width:650px;border-radius:8px;padding:25px;border:1px solid var(--accent-gold);max-height:90vh;overflow-y:auto;box-shadow:0 0 20px rgba(0,0,0,0.8)}
+        .modal-header{font-size:1.2rem;color:var(--accent-gold);border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:15px}
+        .form-group{margin-bottom:15px}
+        label{display:block;font-size:.85rem;margin-bottom:6px;color:var(--text-sub)}
+        input[type="text"],textarea{width:100%;background:var(--bg-main);border:1px solid var(--border);color:var(--text-main);padding:10px;border-radius:4px;font-size:.95rem;font-family:inherit}
+        textarea{resize:vertical;min-height:180px;line-height:1.6}
+        .reader-view{display:none}
+        .reader-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:15px}
+        .reader-content{font-size:1.1rem;line-height:1.9;color:#DDD;white-space:pre-wrap;background:var(--bg-card);padding:25px;border-radius:8px;border:1px solid var(--border)}
+        .status-msg{font-size:.85rem;color:var(--accent-gold);margin-top:10px;font-style:italic}
+        .preview-img{max-width:100px;max-height:140px;margin-top:10px;border-radius:4px;border:1px solid var(--border);display:none}
     </style>
 </head>
 <body>
 
-    <!-- HALAMAN UTAMA -->
     <div id="app-home">
         <header>
             <div class="brand-container">
@@ -289,7 +70,6 @@
         <div id="novel-list" class="grid"></div>
     </div>
 
-    <!-- HALAMAN DETAIL NOVEL -->
     <div id="app-novel" class="reader-view">
         <header>
             <button class="secondary" onclick="showView('app-home')">← Kembali ke Koleksi</button>
@@ -300,7 +80,6 @@
         <div id="chapter-list" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));"></div>
     </div>
 
-    <!-- HALAMAN BACA -->
     <div id="app-reader" class="reader-view">
         <div class="reader-header">
             <button class="secondary" onclick="showView('app-novel')">← Daftar Bab</button>
@@ -310,7 +89,6 @@
         <div id="read-chapter-content" class="reader-content"></div>
     </div>
 
-    <!-- MODAL TAMBAH NOVEL -->
     <div id="modal-novel" class="modal">
         <div class="modal-content">
             <div class="modal-header">Tambah Novel Baru</div>
@@ -330,7 +108,6 @@
         </div>
     </div>
 
-    <!-- MODAL TAMBAH BAB -->
     <div id="modal-chapter" class="modal">
         <div class="modal-content">
             <div class="modal-header">Tambah & Terjemahkan Bab</div>
@@ -342,7 +119,7 @@
 
             <div class="form-group">
                 <label style="color: var(--accent-gold);">Tempel Teks Mandarin Di Sini</label>
-                <textarea id="raw-chinese-text" placeholder="Tempelkan teks Mandarin di sini. Jarak antarparagraf akan dipisahkan secara otomatis..."></textarea>
+                <textarea id="raw-chinese-text" placeholder="Tempelkan teks Mandarin di sini... Jarak antarparagraf akan dipisahkan secara otomatis."></textarea>
             </div>
 
             <button type="button" id="btn-translate" style="width: 100%; padding: 12px;" onclick="processAndSaveChapter()">
@@ -358,202 +135,94 @@
     </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('hestl_novels_db')) || [];
-        let activeNovelId = null;
-        let selectedCoverBase64 = "";
-
-        function saveData() {
-            localStorage.setItem('hestl_novels_db', JSON.stringify(db));
-            updateStats();
-            renderNovels();
-        }
-
-        function updateStats() {
-            document.getElementById('stat-total-novels').innerText = db.length;
-            let totalChapters = db.reduce((sum, n) => sum + (n.chapters ? n.chapters.length : 0), 0);
-            document.getElementById('stat-total-chapters').innerText = totalChapters;
-        }
-
-        function showView(viewId) {
-            document.querySelectorAll('#app-home, .reader-view').forEach(el => el.style.display = 'none');
-            document.getElementById(viewId).style.display = 'block';
-        }
-
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { 
-            document.getElementById(id).style.display = 'none'; 
-            document.getElementById('translate-status').innerText = '';
-        }
-
-        // Preview dan konversi gambar sampul ke Base64
-        function previewCover(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedCoverBase64 = e.target.result;
-                    const img = document.getElementById('cover-preview');
-                    img.src = selectedCoverBase64;
-                    img.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
+        let db=JSON.parse(localStorage.getItem('hestl_novels_db'))||[],activeNovelId=null,selectedCoverBase64="";
+        function saveData(){localStorage.setItem('hestl_novels_db',JSON.stringify(db));updateStats();renderNovels();}
+        function updateStats(){document.getElementById('stat-total-novels').innerText=db.length;document.getElementById('stat-total-chapters').innerText=db.reduce((s,n)=>s+(n.chapters?n.chapters.length:0),0);}
+        function showView(v){document.querySelectorAll('#app-home, .reader-view').forEach(e=>e.style.display='none');document.getElementById(v).style.display='block';}
+        function openModal(id){document.getElementById(id).style.display='flex';}
+        function closeModal(id){document.getElementById(id).style.display='none';document.getElementById('translate-status').innerText='';}
+        function previewCover(e){let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ex=>{selectedCoverBase64=ex.target.result;let img=document.getElementById('cover-preview');img.src=selectedCoverBase64;img.style.display='block';};r.readAsDataURL(f);}}
+        function autoFormatParagraphs(t){if(!t)return"";let f=t.replace(/\r\n/g,'\n').replace(/\r/g,'\n');f=f.replace(/([。！？\?!])([^\n"'])/g,'$1\n\n$2');return f.split('\n').filter(l=>l.trim().length>0).join('\n\n');}
+        async function translateChunk(text){
+            let tUrl=`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=id&dt=t&q=${encodeURIComponent(text)}`;
+            let pUrl=`https://api.allorigins.win/raw?url=${encodeURIComponent(tUrl)}`;
+            try{
+                let res=await fetch(pUrl);
+                if(!res.ok)throw new Error('Proxy error');
+                let d=await res.json(),out='';
+                if(d&&d[0])d[0].forEach(i=>{if(i[0])out+=i[0];});
+                return out;
+            }catch(e){
+                let res=await fetch(tUrl),d=await res.json(),out='';
+                if(d&&d[0])d[0].forEach(i=>{if(i[0])out+=i[0];});
+                return out;
             }
         }
-
-        // OTOMATIS MEMBERI JARAK ANTARPARAGRAF PADA TEKS PADAT/TANPA SPASI
-        function autoFormatParagraphs(text) {
-            if (!text) return "";
-            
-            // 1. Normalisasi baris baru terlebih dahulu
-            let formatted = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-            
-            // 2. Jika teks sangat padat (misal ditempel tanpa spasi/jarak antar kalimat),
-            // tambahkan pemisah baris otomatis di setiap akhir tanda baca Tiongkok (。, ！, ？）
-            formatted = formatted.replace(/([。！？\?!])([^\n"'])/g, '$1\n\n$2');
-            
-            // 3. Pastikan setiap baris yang terpisah mendapatkan spasi ganda (jarak paragraf rapi)
-            let lines = formatted.split('\n').filter(line => line.trim().length > 0);
-            return lines.join('\n\n');
-        }
-
-        // API Terjemahan Otomatis
-        async function translateChunk(text) {
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=id&dt=t&q=${encodeURIComponent(text)}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('Gagal terjemah');
-            const data = await res.json();
-            
-            let translated = '';
-            if (data && data[0]) {
-                data[0].forEach(item => {
-                    if (item[0]) translated += item[0];
-                });
-            }
-            return translated;
-        }
-
-        // Penyesuaian Gaya Bahasa Novel Baku (Aku/Kau, hapus Slang)
-        function sanitizeNovelStyle(text) {
-            return text
-                .replace(/\b(kamu|anda)\b/gi, 'kau')
-                .replace(/\b(saya|hamba)\b/gi, 'aku')
-                .replace(/\b(mas|mbak|bang|bung|lo|gue|bro|sis)\b/gi, '')
-                .replace(/  +/g, ' ');
-        }
-
-        async function processAndSaveChapter() {
-            const title = document.getElementById('input-chapter-title').value.trim();
-            let rawText = document.getElementById('raw-chinese-text').value.trim();
-            const statusEl = document.getElementById('translate-status');
-            const btnTranslate = document.getElementById('btn-translate');
-
-            if (!title || !rawText) {
-                alert('Judul Bab dan Teks Mandarin wajib diisi!');
-                return;
-            }
-
-            statusEl.innerText = '⏳ Memformat jarak paragraf & menerjemahkan... Mohon tunggu.';
-            btnTranslate.disabled = true;
-
-            try {
-                // Formatting otomatis jarak paragraf
-                rawText = autoFormatParagraphs(rawText);
-
-                const paragraphs = rawText.split('\n\n');
-                let result = [];
-
-                for (let p of paragraphs) {
-                    if (p.trim().length === 0) continue;
-                    let translatedP = await translateChunk(p);
-                    translatedP = sanitizeNovelStyle(translatedP);
-                    result.push(translatedP);
+        function sanitizeNovelStyle(t){return t.replace(/\b(kamu|anda)\b/gi,'kau').replace(/\b(saya|hamba)\b/gi,'aku').replace(/\b(mas|mbak|bang|bung|lo|gue|bro|sis)\b/gi,'').replace(/  +/g,' ');}
+        async function processAndSaveChapter(){
+            let title=document.getElementById('input-chapter-title').value.trim(),rawText=document.getElementById('raw-chinese-text').value.trim(),statusEl=document.getElementById('translate-status'),btn=document.getElementById('btn-translate');
+            if(!title||!rawText){alert('Judul Bab dan Teks Mandarin wajib diisi!');return;}
+            statusEl.innerText='⏳ Memformat & menerjemahkan...';btn.disabled=true;
+            try{
+                rawText=autoFormatParagraphs(rawText);
+                let paragraphs=rawText.split('\n\n'),result=[];
+                for(let i=0;i<paragraphs.length;i++){
+                    let p=paragraphs[i];if(p.trim().length===0)continue;
+                    statusEl.innerText=`⏳ Menerjemahkan paragraf ${i+1}/${paragraphs.length}...`;
+                    let tr=await translateChunk(p);
+                    result.push(sanitizeNovelStyle(tr));
                 }
-
-                const translatedContent = result.join('\n\n');
-
-                const novel = db.find(n => n.id === activeNovelId);
-                novel.chapters.push({ 
-                    id: Date.now(), 
-                    title: title, 
-                    content: translatedContent, 
-                    rawChinese: rawText 
-                });
-
-                saveData();
-                renderChapters();
-
-                document.getElementById('input-chapter-title').value = '';
-                document.getElementById('raw-chinese-text').value = '';
+                let novel=db.find(n=>n.id===activeNovelId);
+                novel.chapters.push({id:Date.now(),title,content:result.join('\n\n'),rawChinese:rawText});
+                saveData();renderChapters();
+                document.getElementById('input-chapter-title').value='';document.getElementById('raw-chinese-text').value='';
                 closeModal('modal-chapter');
-
-                alert('✅ Bab berhasil diterjemahkan dan dipisah paragrafnya secara otomatis!');
-            } catch (err) {
-                console.error(err);
-                statusEl.innerText = '❌ Terjadi kesalahan koneksi saat menerjemahkan.';
-            } finally {
-                btnTranslate.disabled = false;
-            }
+                alert('✅ Bab berhasil diterjemahkan dan disimpan!');
+            }catch(err){
+                console.error(err);alert('❌ Jaringan bermasalah.');statusEl.innerText='❌ Gagal menerjemahkan.';
+            }finally{btn.disabled=false;}
         }
-
-        function saveNovel() {
-            const title = document.getElementById('input-novel-title').value.trim();
-            if(!title) {
-                alert('Judul novel tidak boleh kosong!');
-                return;
-            }
-
-            db.push({ 
-                id: Date.now(), 
-                title: title, 
-                cover: selectedCoverBase64 || '', 
-                chapters: [] 
-            });
-
-            document.getElementById('input-novel-title').value = '';
-            document.getElementById('input-novel-cover').value = '';
-            document.getElementById('cover-preview').style.display = 'none';
-            selectedCoverBase64 = "";
-            
-            closeModal('modal-novel');
-            saveData();
+        function saveNovel(){
+            let title=document.getElementById('input-novel-title').value.trim();
+            if(!title){alert('Judul novel tidak boleh kosong!');return;}
+            db.push({id:Date.now(),title,cover:selectedCoverBase64||'',chapters:[]});
+            document.getElementById('input-novel-title').value='';document.getElementById('input-novel-cover').value='';
+            document.getElementById('cover-preview').style.display='none';selectedCoverBase64="";
+            closeModal('modal-novel');saveData();
         }
-
-        function renderNovels() {
-            const container = document.getElementById('novel-list');
-            const searchQuery = document.getElementById('search-input').value.toLowerCase();
-            
-            const filtered = db.filter(n => n.title.toLowerCase().includes(searchQuery));
-
-            container.innerHTML = filtered.length === 0 ? '<p style="color:var(--text-sub)">Belum ada novel dalam koleksi.</p>' : '';
-            
-            filtered.forEach(n => {
-                const coverSrc = n.cover || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="%23251F22"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23D4AF37" font-size="14">HesTL Novel</text></svg>';
-                
-                container.innerHTML += `
-                    <div class="card" onclick="openNovel(${n.id})">
-                        <img src="${coverSrc}" class="card-cover" alt="Sampul">
-                        <div class="card-body">
-                            <div class="card-title">${n.title}</div>
-                            <div class="card-info">${n.chapters ? n.chapters.length : 0} Bab Terisi</div>
-                        </div>
-                    </div>`;
+        function renderNovels(){
+            let container=document.getElementById('novel-list'),q=document.getElementById('search-input').value.toLowerCase(),filtered=db.filter(n=>n.title.toLowerCase().includes(q));
+            container.innerHTML=filtered.length===0?'<p style="color:var(--text-sub)">Belum ada novel.</p>':'';
+            filtered.forEach(n=>{
+                let cSrc=n.cover||'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="%23251F22"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23D4AF37" font-size="14">HesTL Novel</text></svg>';
+                container.innerHTML+=`<div class="card" onclick="openNovel(${n.id})"><img src="${cSrc}" class="card-cover"><div class="card-body"><div class="card-title">${n.title}</div><div class="card-info">${n.chapters?n.chapters.length:0} Bab</div></div></div>`;
             });
         }
-
-        function openNovel(id) {
-            activeNovelId = id;
-            const novel = db.find(n => n.id === id);
-            document.getElementById('novel-detail-title').innerText = novel.title;
-            renderChapters();
-            showView('app-novel');
+        function openNovel(id){activeNovelId=id;let novel=db.find(n=>n.id===id);document.getElementById('novel-detail-title').innerText=novel.title;renderChapters();showView('app-novel');}
+        function renderChapters(){
+            let novel=db.find(n=>n.id===activeNovelId),container=document.getElementById('chapter-list');
+            container.innerHTML=novel.chapters.length===0?'<p style="color:var(--text-sub)">Belum ada bab.</p>':'';
+            novel.chapters.forEach(c=>{container.innerHTML+=`<div class="card" onclick="readChapter(${c.id})" style="padding:15px;"><div class="card-title" style="margin:0;">${c.title}</div></div>`;});
         }
+        function readChapter(chapId){
+            let novel=db.find(n=>n.id===activeNovelId),chap=novel.chapters.find(c=>c.id===chapId);
+            document.getElementById('read-chapter-title').innerText=chap.title;
+            let html="";
+            if(chap.rawChinese){html+=`<details style="margin-bottom:20px;background:var(--bg-main);padding:12px;border-radius:4px;border:1px solid var(--border);"><summary style="cursor:pointer;color:var(--accent-gold);font-weight:bold;">Tampilkan Teks Asli Mandarin</summary><p style="margin-top:10px;color:var(--text-sub);white-space:pre-wrap;font-size:0.95rem;">${chap.rawChinese}</p></details>`;}
+            html+=`<div>${chap.content}</div>`;
+            document.getElementById('read-chapter-content').innerHTML=html;showView('app-reader');
+        }
+        function exportData(){
+            let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
+            a.download='HesTL_Backup_Novel.json';a.click();
+        }
+        function importData(e){
+            let file=e.target.files[0];if(!file)return;
+            let reader=new FileReader();reader.onload=function(evt){try{db=JSON.parse(evt.target.result);saveData();alert('Data berhasil diimpor!');}catch(err){alert('File JSON tidak valid!');}};
+            reader.readAsText(file);
+        }
+        updateStats();renderNovels();
+    </script>
+</body>
+    </html>
 
-        function renderChapters() {
-            const novel = db.find(n => n.id === activeNovelId);
-            const container = document.getElementById('chapter-list');
-            container.innerHTML = novel.chapters.length === 0 ? '<p style="color:var(--text-sub)">Belum ada bab untuk novel ini.</p>' : '';
-            
-            novel.chapters.forEach(c => {
-                container.innerHTML += `
-                    <div class="card" onclick="readChapter(${c.id})" style="padding:15px;">
-                   
